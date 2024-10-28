@@ -1,0 +1,6 @@
+@TennosProducts.WebApi_HostAddress = http://localhost:5170
+
+GET {{TennosProducts.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
