@@ -13,3 +13,10 @@ FrontEnd
 
 
 ![image](https://github.com/user-attachments/assets/96cc0546-3e2f-4495-b0ba-d5718fd2400c)
+
+
+GitFlow /  Commint y demas. 
+![image](https://github.com/user-attachments/assets/25193e7f-63c2-4cae-9163-ad18f9f36c9b)
+
+
+Nota: Aun estoy afinando cualquier temita que encuentre.
