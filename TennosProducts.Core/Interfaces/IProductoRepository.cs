@@ -16,8 +16,8 @@ namespace TennosProducts.Core.Interfaces
 
         Task<Productos> InsertProducto(ProductoDto producto);
 
-        void DeleteById(int ProductoID);
+        Task<Productos> DeleteById(int ProductoID);
 
-        //Task<Producto> ActualizarProducto(ProductoDto producto);
+        Task<Productos> ActualizarProducto(ProductoDto producto);
     }
 }

@@ -35,23 +35,43 @@ namespace TennosProducts.BusinessLogic.Logic
         public Task<Productos> InsertProducto(ProductoDto producto)
         {
 
+            var productos = new Productos
+            {
+                Nombre = producto.Nombre,
+                Precio = producto.Precio,
+                FechaCreacion = DateTime.Now
+            };
 
-            //var productos = new Productos
-            //{
-            //    Nombre = producto.Nombre,
-            //    Precio = producto.Precio,
-            //    FechaCreacion = DateTime.Now
-            //};
-
-            //_context.SaveChanges();
-            ////return productos;
+            _context.SaveChanges();
+            //return productos;
             throw new NotImplementedException();
         }
 
-        public void DeleteById(int ProductoID)
+        //public async Task DeleteById(int ProductoID)
+        //{
+        //    var producto = await _context.productos.FindAsync(ProductoID);
+
+        //    if (producto != null)
+        //        throw new Exception("No encontrado");
+
+        //    _context.productos.Remove(producto);
+        //    await _context.SaveChangesAsync();
+
+        //}
+
+        //Task<Productos> IProductoRepository.DeleteById(int ProductoID)
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        public Task<Productos> ActualizarProducto(ProductoDto producto)
         {
-            _context.Remove(ProductoID);
-            _context.SaveChanges();
+            throw new NotImplementedException();
+        }
+
+        Task<Productos> IProductoRepository.DeleteById(int ProductoID)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -33,20 +33,27 @@ namespace TennosProducts.WebApi.Controllers
 
         }
 
-        [HttpPost("/AgragarProducto")]
+        [HttpPost("/AgregarProducto")]
         public async Task<Productos> InsertProducto(ProductoDto productoDto)
+        {
+            return await _productoRepository.InsertProducto(productoDto);
+
+        }
+        [HttpPut("/AgregarProducto/{id}")]
+        public async Task<Productos> ActualizarProducto(ProductoDto productoDto)
         {
             return await _productoRepository.InsertProducto(productoDto);
           
         }
-
-
-        [HttpDelete("/BorrarProducto/{ProductoID}")]
-        public void DeleteById(int ProductoID)
+        [HttpDelete("/BorrarProducto")]
+        public IActionResult DeleteById(int ProductoID)
         {
-            _productoRepository.DeleteById(ProductoID);
+            var result = _productoRepository.DeleteById(ProductoID);
             
+            return StatusCode(StatusCodes.Status400BadRequest);
         }
+
+       
 
     }
 }
