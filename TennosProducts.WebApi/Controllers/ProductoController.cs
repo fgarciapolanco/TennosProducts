@@ -12,40 +12,77 @@ namespace TennosProducts.WebApi.Controllers
     [ApiController]
     public class ProductoController : ControllerBase
     {
-        public readonly IProductoRepository _productoRepository;
+        public readonly IProductoRepository<Productos> _productoRepository;
 
-        public ProductoController(IProductoRepository productoRepository)
+        public ProductoController(IProductoRepository<Productos> productoRepository)
         {
             _productoRepository = productoRepository;
         }
 
         [HttpGet("/TodosLosProductos")]
-        public async Task<ActionResult<List<Productos>>> GetProductos()
+        public async Task<IActionResult> GetAll()
         {
-            var buscarTodos = await _productoRepository.GetProductoAsync();
-            return Ok(buscarTodos);
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Productos>> GetProductosId(int id)
-        {
-            return await _productoRepository.GetProductoByIdAsync(id);
-
-        }
-
-        [HttpPost("/AgragarProducto")]
-        public async Task<Productos> InsertProducto(ProductoDto productoDto)
-        {
-            return await _productoRepository.InsertProducto(productoDto);
-          
+            var productos = await _productoRepository.GetAllAsync();
+            return Ok(productos);
         }
 
 
-        [HttpDelete("/BorrarProducto/{ProductoID}")]
-        public void DeleteById(int ProductoID)
+        [HttpGet("/BuscarProductoPorID")]
+        public async Task<IActionResult> GetById(int ProductoID)
         {
-            _productoRepository.DeleteById(ProductoID);
-            
+
+            var producto = await _productoRepository.GetByIdAsync(ProductoID);
+            if (producto == null)
+            {
+                return NotFound();
+            }
+            return Ok(producto);
+        }
+
+
+        [HttpPost("/AgregarProducto")]
+        public async Task<IActionResult> Post(ProductoDto productosDto)
+        {
+            var productoEntidad = new Productos()
+            {
+                Precio = productosDto.Precio,
+                Nombre = productosDto.Nombre,
+                FechaCreacion = DateTime.Now
+            };
+
+            var createProResponse = await _productoRepository.CreateAsync(productoEntidad);
+            return CreatedAtAction(nameof(GetById), new { id = createProResponse.ProductoID }, createProResponse);
+
+        }
+
+        [HttpPost("/AtualizarProducto")]
+        public async Task<IActionResult> Put(int id, ProductoDto productosDto)
+        {
+            var productoActualizar = await _productoRepository.GetByIdAsync(id);
+            if (productoActualizar == null)
+            {
+                return NotFound();
+            }
+            productoActualizar.Nombre = productosDto.Nombre;
+            productoActualizar.Precio = productosDto.Precio;
+            productoActualizar.FechaCreacion = productosDto.FechaCreacion;
+
+            await _productoRepository.UpdateAsync(productoActualizar);
+            return NoContent();
+        }
+
+        [HttpDelete("/BorrarProducto/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var buscarIdBorrar = await _productoRepository.GetByIdAsync(id);
+            if (buscarIdBorrar == null)
+            {
+                return NotFound("Id Producto no encontrado");
+            }
+
+
+            await _productoRepository.DeleteAsync(buscarIdBorrar);
+            return NoContent();
         }
 
     }

@@ -7,51 +7,50 @@ using System.Text;
 using System.Threading.Tasks;
 using TennosProducts.BusinessLogic.Data;
 using TennosProducts.Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace TennosProducts.BusinessLogic.Logic
 {
 
-    public class ProductoRepository : IProductoRepository
+    public class ProductoRepository<T> : IProductoRepository<T> where T : class
     {
         private readonly ProductoDbContext _context;
+        private readonly DbSet<T> _Dbset;
         public ProductoRepository(ProductoDbContext context)
         {
+            _Dbset = context.Set<T>();
             _context = context;
         }
 
-        public async Task<Productos> GetProductoByIdAsync(int id)
+        public async Task<T> CreateAsync(T entity)
         {
-            var buscarProductoId = await _context.productos.FindAsync(id); 
-
-            return buscarProductoId;
+            await _Dbset.AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity;
         }
 
-        public async Task<IReadOnlyList<Productos>> GetProductoAsync()
+        public async Task DeleteAsync(T entity)
         {
-            var buscarTodosProductos =  _context.productos.ToList();
-            return buscarTodosProductos;
+            _Dbset.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<Productos> InsertProducto(ProductoDto producto)
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-
-
-            //var productos = new Productos
-            //{
-            //    Nombre = producto.Nombre,
-            //    Precio = producto.Precio,
-            //    FechaCreacion = DateTime.Now
-            //};
-
-            //_context.SaveChanges();
-            ////return productos;
-            throw new NotImplementedException();
+            return _Dbset.ToList();
         }
 
-        public void DeleteById(int ProductoID)
+        public async Task<T> GetByIdAsync(int id)
         {
-            _context.Remove(ProductoID);
-            _context.SaveChanges();
+            return await _Dbset.FindAsync(id);
+        }
+
+        public async Task UpdateAsync(T entity)
+        {
+            _Dbset.AddAsync(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+           
         }
     }
 }
