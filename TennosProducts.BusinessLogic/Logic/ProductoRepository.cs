@@ -50,40 +50,7 @@ namespace TennosProducts.BusinessLogic.Logic
             _Dbset.AddAsync(entity);
             _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            //}
-            //public Task<Productos> ActualizarProducto(ProductoDto producto)
-            //{
-            //    throw new NotImplementedException();
-            //}
-            //public Task<bool> DeleteById(int ProductoID)
-            //{
-            //    throw new NotImplementedException();
-            //}
-
-            //public Task<T> CreateAsync(T entity)
-            //{
-            //    throw new NotImplementedException();
-            //}
-
-            //public Task UpdateAsync(T entity)
-            //{
-            //    throw new NotImplementedException();
-            //}
-
-            //public Task DeleteAsync(T entity)
-            //{
-            //    throw new NotImplementedException();
-            //}
-
-            //public Task<IEnumerable<T>> GetAllAsync()
-            //{
-            //    throw new NotImplementedException();
-            //}
-
-            //public Task<T> GetByIdAsync(int ProductoID)
-            //{
-            //    throw new NotImplementedException();
-            //}
+           
         }
     }
 }
