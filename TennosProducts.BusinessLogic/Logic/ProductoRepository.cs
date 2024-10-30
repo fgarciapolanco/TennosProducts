@@ -7,71 +7,83 @@ using System.Text;
 using System.Threading.Tasks;
 using TennosProducts.BusinessLogic.Data;
 using TennosProducts.Core.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace TennosProducts.BusinessLogic.Logic
 {
 
-    public class ProductoRepository : IProductoRepository
+    public class ProductoRepository<T> : IProductoRepository<T> where T : class
     {
         private readonly ProductoDbContext _context;
+        private readonly DbSet<T> _Dbset;
         public ProductoRepository(ProductoDbContext context)
         {
+            _Dbset = context.Set<T>();
             _context = context;
         }
 
-        public async Task<Productos> GetProductoByIdAsync(int id)
+        public async Task<T> CreateAsync(T entity)
         {
-            var buscarProductoId = await _context.productos.FindAsync(id); 
-
-            return buscarProductoId;
+            await _Dbset.AddAsync(entity);
+            await _context.SaveChangesAsync();
+            return entity;
         }
 
-        public async Task<IReadOnlyList<Productos>> GetProductoAsync()
+        public async Task DeleteAsync(T entity)
         {
-            var buscarTodosProductos =  _context.productos.ToList();
-            return buscarTodosProductos;
+            _Dbset.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
-        public Task<Productos> InsertProducto(ProductoDto producto)
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
-
-            var productos = new Productos
-            {
-                Nombre = producto.Nombre,
-                Precio = producto.Precio,
-                FechaCreacion = DateTime.Now
-            };
-
-            _context.SaveChanges();
-            //return productos;
-            throw new NotImplementedException();
+            return _Dbset.ToList();
         }
 
-        //public async Task DeleteById(int ProductoID)
-        //{
-        //    var producto = await _context.productos.FindAsync(ProductoID);
-
-        //    if (producto != null)
-        //        throw new Exception("No encontrado");
-
-        //    _context.productos.Remove(producto);
-        //    await _context.SaveChangesAsync();
-
-        //}
-
-        //Task<Productos> IProductoRepository.DeleteById(int ProductoID)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        public Task<Productos> ActualizarProducto(ProductoDto producto)
+        public async Task<T> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _Dbset.FindAsync(id);
         }
 
-        Task<Productos> IProductoRepository.DeleteById(int ProductoID)
+        public async Task UpdateAsync(T entity)
         {
-            throw new NotImplementedException();
+            _Dbset.AddAsync(entity);
+            _context.Entry(entity).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+            //}
+            //public Task<Productos> ActualizarProducto(ProductoDto producto)
+            //{
+            //    throw new NotImplementedException();
+            //}
+            //public Task<bool> DeleteById(int ProductoID)
+            //{
+            //    throw new NotImplementedException();
+            //}
+
+            //public Task<T> CreateAsync(T entity)
+            //{
+            //    throw new NotImplementedException();
+            //}
+
+            //public Task UpdateAsync(T entity)
+            //{
+            //    throw new NotImplementedException();
+            //}
+
+            //public Task DeleteAsync(T entity)
+            //{
+            //    throw new NotImplementedException();
+            //}
+
+            //public Task<IEnumerable<T>> GetAllAsync()
+            //{
+            //    throw new NotImplementedException();
+            //}
+
+            //public Task<T> GetByIdAsync(int ProductoID)
+            //{
+            //    throw new NotImplementedException();
+            //}
         }
     }
 }

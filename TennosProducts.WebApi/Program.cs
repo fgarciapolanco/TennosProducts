@@ -11,7 +11,7 @@ builder.Services.AddDbContext<ProductoDbContext>(opt => {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("ProductoConnection"));
 });
 
-builder.Services.AddTransient<IProductoRepository, ProductoRepository>();
+builder.Services.AddScoped(typeof(IProductoRepository<>), typeof(ProductoRepository<>));
 
 
 builder.Services.AddControllers();
