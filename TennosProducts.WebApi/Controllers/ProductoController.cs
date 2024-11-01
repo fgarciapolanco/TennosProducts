@@ -55,7 +55,7 @@ namespace TennosProducts.WebApi.Controllers
 
         }
 
-        [HttpPost("/AtualizarProducto")]
+        [HttpPut("/AtualizarProducto")]
         public async Task<IActionResult> Put(int id, ProductoDto productosDto)
         {
             var productoActualizar = await _productoRepository.GetByIdAsync(id);
